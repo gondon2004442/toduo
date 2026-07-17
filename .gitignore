@@ -1,0 +1,8 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.log
+
+# local Supabase secrets, if ever kept outside config.js
+.env
+.env.local
