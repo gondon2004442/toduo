@@ -74,7 +74,7 @@ function renderSetup() {
     </main>`;
 
   appEl.querySelector("#s-save").addEventListener("click", () => {
-    const url = appEl.querySelector("#s-url").value.trim().replace(/\/+$/, "");
+    const url = normalizeSupabaseUrl(appEl.querySelector("#s-url").value);
     const key = appEl.querySelector("#s-key").value.trim().replace(/\s+/g, "");
     if (!url || !key) {
       alert("Заполните оба поля");
@@ -97,6 +97,19 @@ function renderSetup() {
     saveCredentials(url, key);
     main();
   });
+}
+
+// Turn whatever the user pasted into a clean Supabase API URL.
+// Handles the common mistake of pasting the dashboard URL
+// (https://supabase.com/dashboard/project/<ref>) instead of the API URL.
+function normalizeSupabaseUrl(raw) {
+  let url = String(raw || "").trim();
+  const dash = url.match(/dashboard\/project\/([a-z0-9]{16,})/i);
+  if (dash) return `https://${dash[1]}.supabase.co`;
+  url = url.replace(/\s+/g, "").replace(/\/+$/, "");
+  // Drop any accidental path after the host (e.g. .supabase.co/anything).
+  const m = url.match(/^(https?:\/\/[^/]+)/i);
+  return m ? m[1] : url;
 }
 
 // ── Auth screen (sign in / sign up) ──────────────────────────────────────────
