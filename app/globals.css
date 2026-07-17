@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  color: #37352f;
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Thin, unobtrusive scrollbars — closer to the Notion feel. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d3d3d1 transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #d3d3d1;
+  border-radius: 8px;
+}
