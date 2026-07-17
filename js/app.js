@@ -63,20 +63,35 @@ function renderSetup() {
         <label>Project URL
           <input id="s-url" placeholder="https://xxxxx.supabase.co" />
         </label>
-        <label>anon public key
-          <input id="s-key" placeholder="eyJhbGciOi..." />
+        <label>anon / publishable key
+          <input id="s-key" placeholder="sb_publishable_... или eyJhbGciOi..." />
         </label>
         <p class="hint">Где взять: Supabase → ваш проект → Project Settings → API.
-          Ключ <b>anon</b> публичный, это нормально.</p>
+          Нужен публичный ключ (<b>anon</b> или <b>publishable</b>) — не секретный.
+          Копируйте кнопкой копирования, а не выделением мышью.</p>
         <button class="btn primary block" id="s-save">Сохранить и продолжить</button>
       </div>
     </main>`;
 
   appEl.querySelector("#s-save").addEventListener("click", () => {
-    const url = appEl.querySelector("#s-url").value.trim();
-    const key = appEl.querySelector("#s-key").value.trim();
+    const url = appEl.querySelector("#s-url").value.trim().replace(/\/+$/, "");
+    const key = appEl.querySelector("#s-key").value.trim().replace(/\s+/g, "");
     if (!url || !key) {
       alert("Заполните оба поля");
+      return;
+    }
+    // Текст, скопированный из обрезанного поля, тянет за собой «…» (или иной
+    // не-Latin1 символ), из-за чего позже ломаются заголовки запроса. Ловим сразу.
+    if (/[^\x00-\x7F]/.test(url) || /[^\x00-\x7F]/.test(key)) {
+      alert(
+        "В URL или ключе есть посторонний символ (например «…»).\n\n" +
+          "Скорее всего ключ скопирован не полностью. В Supabase нажмите ИКОНКУ " +
+          "копирования рядом с ключом (не выделяйте мышью) и вставьте снова.",
+      );
+      return;
+    }
+    if (!/^https:\/\/.+/.test(url)) {
+      alert("Project URL должен начинаться с https:// и вести на ваш проект Supabase.");
       return;
     }
     saveCredentials(url, key);
@@ -159,6 +174,12 @@ function renderAuth() {
 }
 
 function translateAuthError(msg = "") {
+  if (/ISO-8859-1|non.*code point/i.test(msg))
+    return "Ключ Supabase скопирован не полностью (есть символ «…»). Нажмите «Сменить проект Supabase» ниже и вставьте ключ заново кнопкой копирования.";
+  if (/invalid api key/i.test(msg))
+    return "Неверный или неполный ключ Supabase. Проверьте publishable/anon key.";
+  if (/failed to fetch/i.test(msg))
+    return "Не удаётся связаться с Supabase. Проверьте Project URL.";
   if (/invalid login credentials/i.test(msg)) return "Неверный email или пароль";
   if (/already registered/i.test(msg)) return "Этот email уже зарегистрирован";
   if (/password should be at least/i.test(msg)) return "Пароль слишком короткий (мин. 6 символов)";
