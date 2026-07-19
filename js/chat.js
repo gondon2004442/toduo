@@ -17,7 +17,7 @@ export function renderChat(root, ctx) {
       <div class="messages" id="chat-messages"></div>
     </div>
     <form class="composer" id="chat-form">
-      <textarea id="chat-input" rows="1" placeholder="Сообщение…  (Enter — отправить, Shift+Enter — перенос)"></textarea>
+      <textarea id="chat-input" rows="1" placeholder="Сообщение…"></textarea>
       <button type="submit">Отправить</button>
     </form>
   `;
