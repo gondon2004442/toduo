@@ -676,19 +676,115 @@ a {
   color: #2a9d54;
 }
 
+/* ── Mobile: sidebar becomes a bottom tab bar, content fills the screen ────── */
 @media (max-width: 720px) {
+  .shell {
+    flex-direction: column;
+  }
+  .panel {
+    order: 1;
+    flex: 1;
+    min-height: 0;
+  }
   .sidebar {
-    width: 64px;
+    order: 2;
+    width: 100%;
+    height: 56px;
+    flex-direction: row;
+    align-items: stretch;
+    border-right: none;
+    border-top: 1px solid var(--line);
+    padding: 0;
+    flex-shrink: 0;
+    padding-bottom: env(safe-area-inset-bottom);
   }
-  .side-brand span,
-  .me-name,
+  .side-brand {
+    display: none;
+  }
+  .side-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+  }
   .nav-item {
-    font-size: 0;
+    flex: 1;
+    margin: 0;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    gap: 6px;
   }
-  .nav-item {
-    text-align: center;
+  .nav-item.active {
+    background: transparent;
+    color: var(--accent);
+    box-shadow: inset 0 2px 0 var(--accent);
   }
+  .side-foot {
+    border-top: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+  .me {
+    display: none;
+  }
+  .logout {
+    width: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    border-radius: 0;
+    border-left: 1px solid var(--line);
+  }
+
+  /* Tasks board: single full-width column */
   .board {
     grid-template-columns: 1fr;
+    padding: 12px;
+    gap: 12px;
+  }
+  .panel-head {
+    padding: 12px 14px;
+  }
+  .panel-head h2 {
+    font-size: 16px;
+  }
+  .btn.primary {
+    white-space: nowrap;
+  }
+
+  /* Chat: full width */
+  .messages {
+    max-width: 100%;
+  }
+  .chat-scroll {
+    padding: 14px;
+  }
+  .bubble {
+    max-width: 85%;
+  }
+  .composer {
+    padding: 10px 12px;
+    max-width: 100%;
+  }
+
+  /* Task detail: full-screen sheet */
+  .modal {
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100vw;
+    max-width: 100vw;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    padding: 18px 16px calc(18px + env(safe-area-inset-bottom));
+  }
+  .status-row {
+    flex-wrap: wrap;
   }
 }
